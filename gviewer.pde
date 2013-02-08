@@ -1,7 +1,7 @@
 import java.io.File;
 
 int tileWidth = 128;
-int chunkWidth = tileWidth + 88;
+int chunkWidth = tileWidth + 64;
 
 PImage orig;
 PImage crop;
@@ -27,7 +27,7 @@ void slice(File selection) {
   else {
     fname = selection.getName();
     println("User selected " + fname);
-    orig = loadImage(fname);
+    orig = loadImage(selection.getAbsolutePath());
     
   }
 }
@@ -47,10 +47,10 @@ void draw() {
     int idy;
 
     if ((orig.width - cols * chunkWidth) > (orig.height - rows*chunkWidth)) {
-      orig.resize(0, rows*chunkWidth);
+      orig.resize(0, (rows)*chunkWidth);
     }
     else {
-      orig.resize(cols*chunkWidth, 0);
+      orig.resize((cols)*chunkWidth, 0);
     }
 
     for (int r = 1; r <= rows; r = r + 1) {
@@ -79,7 +79,7 @@ void draw() {
    luaOutput.println("end");
    luaOutput.println(" ");
    luaOutput.println("-- Animation: \"giga\"");
-   luaOutput.println("gigaGroup = group{quality=6.3}");
+   luaOutput.println("gigaGroup = group{quality=8}");
    luaOutput.println("giga = image{ frames(\"chunks/"+fname.substring(0,fname.indexOf("."))+"r%dc%d.png\", "+rows+", "+cols+") }");
    luaOutput.flush();
    luaOutput.close();

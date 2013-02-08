@@ -58,12 +58,6 @@ private:
         vid[id].attach(id);
         motion[id].attach(id);
 
-        // Draw the cube's identity
-        String<128> str;
-        str << "I am cube #" << cube << "\n";
-        //str << "hwid " << Hex(hwid >> 32) << "\n     " << Hex(hwid) << "\n\n";
-        vid[cube].bg0rom.text(vec(1,2), str);
-
         vid[cube].initMode(BG0_SPR_BG1);
         vid[cube].attach(cube);
         drawNeighbors(cube);
@@ -183,21 +177,19 @@ private:
         }
     }
 
-    bool isLonely(CubeID cube)
-    {
-        Neighborhood nb(cube);
-        return !((nb.hasCubeAt(TOP)
-                ||nb.hasCubeAt(BOTTOM))
-                ||(nb.hasCubeAt(LEFT)
-                ||nb.hasCubeAt(RIGHT)));
-        
-    }
+//    bool isLonely(CubeID cube)
+//    {
+//        Neighborhood nb(cube);
+//        return !((nb.hasCubeAt(TOP)
+//                ||nb.hasCubeAt(BOTTOM))
+//                ||(nb.hasCubeAt(LEFT)
+//                ||nb.hasCubeAt(RIGHT)));
+//
+//    }
     
     void drawNeighbors(CubeID cube)
     {
         Neighborhood nb(cube);
-        
-        //Rotation r;
         
         unsigned index;
         
@@ -212,28 +204,12 @@ private:
             << counters[cube].x << " "
             << counters[cube].y << "   \n";
         
-        //unsigned r = 1;
         
         index = (counters[cube].x)-(NUM_COLS*(counters[cube].y-1));
         vid[cube].setOrientation(Side(umod(-counters[cube].orientation,4)));
         vid[cube].bg0.image(vec(0,0), giga, index);
 
 
-        //BG0ROMDrawable &draw = vid[cube].bg0rom;
-        //draw.text(vec(1,6), str);
-
-        //drawSideIndicator(draw, nb, vec( 1,  0), vec(14,  1), TOP);
-        //drawSideIndicator(draw, nb, vec( 0,  1), vec( 1, 14), LEFT);
-        //drawSideIndicator(draw, nb, vec( 1, 15), vec(14,  1), BOTTOM);
-        //drawSideIndicator(draw, nb, vec(15,  1), vec( 1, 14), RIGHT);
-    }
-
-    static void drawSideIndicator(BG0ROMDrawable &draw, Neighborhood &nb,
-        Int2 topLeft, Int2 size, Side s)
-    {
-        unsigned nbColor = draw.ORANGE;
-        draw.fill(topLeft, size,
-            nbColor | (nb.hasNeighborAt(s) ? draw.SOLID_FG : draw.SOLID_BG));
     }
 };
 
@@ -244,8 +220,6 @@ void main()
 
     sensors.install();
 
-    // We're entirely event-driven. Everything is
-    // updated by SensorListener's event callbacks.
     while (1)
         System::paint();
 }
