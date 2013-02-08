@@ -6,13 +6,15 @@ int chunkWidth = tileWidth + 88;
 PImage orig;
 PImage crop;
 
-PrintWriter output;
+PrintWriter luaOutput;
+PrintWriter hOutput;
 
 String fname;
 
 void setup() {
     size(727, 600);
-    output = createWriter("assets.lua");
+    luaOutput = createWriter("assets.lua");
+    hOutput = createWriter("dims.h");
   selectInput("Select an image", "slice");
 }
 
@@ -62,27 +64,30 @@ void draw() {
     }
    
    
-   output.println("-- Metadata");
-   output.println("IconAssets = group{quality=9.95}");
-   output.println("Icon = image{\"icon.png\"}");
-   output.println(" ");
-   output.println("function frames(fmt, count1, count2)");
-   output.println("  t = {}");
-   output.println("  for i = 1, count1 do");
-   output.println("    for j = 1, count2 do");
-   output.println("      t[1+#t] = string.format(fmt, i, j)");
-   output.println("    end");
-   output.println("  end");
-   output.println("  return t");
-   output.println("end");
-   output.println(" ");
-   output.println("-- Animation: \"giga\"");
-   output.println("gigaGroup = group{quality=6.3}");
-   output.println("giga = image{ frames(\"chunks/"+fname.substring(0,fname.indexOf("."))+"r%dc%d.png\", "+rows+", "+cols+") }");
-   output.flush();
-   output.flush();
+   luaOutput.println("-- Metadata");
+   luaOutput.println("IconAssets = group{quality=9.95}");
+   luaOutput.println("Icon = image{\"icon.png\"}");
+   luaOutput.println(" ");
+   luaOutput.println("function frames(fmt, count1, count2)");
+   luaOutput.println("  t = {}");
+   luaOutput.println("  for i = 1, count1 do");
+   luaOutput.println("    for j = 1, count2 do");
+   luaOutput.println("      t[1+#t] = string.format(fmt, i, j)");
+   luaOutput.println("    end");
+   luaOutput.println("  end");
+   luaOutput.println("  return t");
+   luaOutput.println("end");
+   luaOutput.println(" ");
+   luaOutput.println("-- Animation: \"giga\"");
+   luaOutput.println("gigaGroup = group{quality=6.3}");
+   luaOutput.println("giga = image{ frames(\"chunks/"+fname.substring(0,fname.indexOf("."))+"r%dc%d.png\", "+rows+", "+cols+") }");
+   luaOutput.flush();
+   luaOutput.close();
    
-   
+   hOutput.println("#define NUM_ROWS "+rows);
+   hOutput.println("#define NUM_COLS "+cols);
+   hOutput.flush();
+   hOutput.close();
     
   }
 }

@@ -4,6 +4,7 @@
 
 #include <sifteo.h>
 #include "assets.gen.h"
+#include "dims.h"
 using namespace Sifteo;
 
 static AssetSlot MainSlot = AssetSlot::allocate().bootstrap(gigaGroup);
@@ -24,8 +25,8 @@ public:
         unsigned neighborAdd;
         unsigned neighborRemove;
         unsigned orientation;
-        signed x;
-        signed y;
+        signed x = (NUM_COLS / 2) + 1;
+        signed y = (NUM_ROWS / 2) + 1;
     } counters[CUBE_ALLOCATION];
 
     unsigned newest;
@@ -43,7 +44,7 @@ public:
         for (CubeID cube : CubeSet::connected())
             onConnect(cube);
     }
-
+    
 private:
     void onConnect(unsigned id)
     {
@@ -65,7 +66,7 @@ private:
 
         vid[cube].initMode(BG0_SPR_BG1);
         vid[cube].attach(cube);
-        vid[cube].bg0.image(vec(0,0), giga, 4);
+        drawNeighbors(cube);
         
         // Draw initial state for all sensors
         onAccelChange(cube);
@@ -213,8 +214,8 @@ private:
         
         //unsigned r = 1;
         
-        index = (counters[cube].x+1)-(4*(counters[cube].y-1));
-        //vid[cube].setRotation(Rotation(counters[cube].orientation));
+        index = (counters[cube].x)-(NUM_COLS*(counters[cube].y-1));
+        vid[cube].setOrientation(Side(umod(-counters[cube].orientation,4)));
         vid[cube].bg0.image(vec(0,0), giga, index);
 
 
